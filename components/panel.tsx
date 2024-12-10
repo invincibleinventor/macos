@@ -82,11 +82,7 @@ export default function Panel() {
         }
     };
 
-    const handleCloseMenu = () => {
-        setActiveMenu(null);
-        setHoverEnabled(false);
-    };
-
+   
     return (
         <div style={{zIndex:1000}} className="relative w-screen py-1 flex px-4 justify-between items-center content-center bg-white dark:bg-black  dark:bg-opacity-50 bg-opacity-50 backdrop-blur-md">
             <div className="relative flex flex-row items-center content-center space-x-3">
