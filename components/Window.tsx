@@ -18,6 +18,13 @@ const Window = ({ id, appName, title, component: Component, props, isMinimized, 
   const app = apps.find((app) => app.appName === appName);
 
   useEffect(() => {
+    // Detect mobile device and maximize window on load
+    if (window.innerWidth < 768) {
+      handleMaximize(true);
+    }
+  }, []);
+
+  useEffect(() => {
     if (isMinimized) {
       setPosition({ top: -1000, left: -1000 }); // Move off-screen when minimized
     } else if (!isMaximized) {
@@ -26,10 +33,10 @@ const Window = ({ id, appName, title, component: Component, props, isMinimized, 
     }
   }, [isMinimized, isMaximized]);
 
-  const handleMaximize = () => {
+  const handleMaximize = (forceMaximize = false) => {
     const { innerWidth: screenWidth, innerHeight: screenHeight } = window;
 
-    if (!isMaximized) {
+    if (!isMaximized || forceMaximize) {
       setPreviousState({ position, size });
       setSize({
         width: screenWidth,
@@ -137,12 +144,12 @@ const Window = ({ id, appName, title, component: Component, props, isMinimized, 
     >
       <div
         className={`cursor-move ${isMaximized ? '' : 'rounded-t-xl'} ${app?.titlebarblurred ? `dark:bg-opacity-50 bg-opacity-70 dark:bg-black bg-white relative backdrop-blur-sm` : ' dark:bg-gray-800 bg-white relative backdrop-blur-sm'} px-3 py-[10px] flex justify-between`}
-        onDoubleClick={handleMaximize}
+        onDoubleClick={()=>handleMaximize}
         onMouseDown={handleDragStart}
       >
         <div className='flex flex-row items-center content-center space-x-2'>
           <button className='w-3 h-3 rounded-full bg-red-500' onClick={() => removeWindow(id)}></button>
-          <button className='w-3 h-3 rounded-full bg-green-500' onClick={handleMaximize}></button>
+          <button className='w-3 h-3 rounded-full bg-green-500' onClick={() => handleMaximize()}></button>
           <button className='w-3 h-3 rounded-full bg-yellow-500' onClick={() => updateWindow(id, { isMinimized: true })}></button>
         </div>
         <div className='max-w-72 absolute mx-auto dark:text-white right-0 left-0 bottom-[6px] font-sf font-semibold text-sm text-center'>{title}</div>

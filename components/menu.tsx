@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import React, { useEffect, useRef } from 'react';
@@ -20,7 +19,7 @@ export default function Menu(props: any) {
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [props.visible, props.onToggle]);
+    }, [props.visible]);
 
     return (
         <div
@@ -32,8 +31,12 @@ export default function Menu(props: any) {
                     e.stopPropagation();
                     props.onToggle(props.id);
                 }}
-                className={`font-medium font-sf px-2 rounded-md cursor-pointer duration-100 transition-all ease-in dark:hover:bg-black dark:hover:bg-opacity-20 hover:bg-white hover:bg-opacity-20 text-sm dark:text-white text-black ${
-                    props.visible ? 'bg-white dark:bg-black dark:bg-opacity-20 bg-opacity-20' : ''
+                className={`${
+                    props.bold ? 'font-bold' : 'font-medium'
+                } font-sf px-2 rounded-md cursor-pointer duration-100 transition-all ease-in dark:hover:bg-black dark:hover:bg-opacity-20 hover:bg-white hover:bg-opacity-20 text-sm dark:text-white text-black ${
+                    props.visible
+                        ? 'bg-white dark:bg-black dark:bg-opacity-20 bg-opacity-20'
+                        : ''
                 }`}
             >
                 {props.title}
@@ -41,8 +44,8 @@ export default function Menu(props: any) {
             {props.visible && (
                 <div
                     ref={menuRef}
-                    style={{ zIndex: 2000 }} // Ensure this has a higher z-index than the page content
-                    className="fixed mt-2 min-w-56 w-max bg-white dark:bg-black dark:bg-opacity-50 bg-opacity-50 rounded-lg flex flex-col space-y-[1px] p-[6px] shadow-lg backdrop-blur-md"
+                    style={{ zIndex: 2000 }}
+                    className="fixed left-0 sm:left-auto mt-2 min-w-56 w-max bg-white dark:bg-black dark:bg-opacity-50 bg-opacity-50 rounded-lg flex flex-col space-y-[1px] p-[6px] shadow-lg backdrop-blur-md"
                 >
                     {props.data.map((entry: any, index: number) =>
                         entry.separator ? (

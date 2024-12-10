@@ -34,8 +34,8 @@ const Dock = () => {
   };
 
   return (
-    <motion.div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex justify-center items-center z-50 py-[2px] dark:bg-black dark:bg-opacity-30 bg-white bg-opacity-30 px-[2px] backdrop-blur-lg rounded-2xl border-[0.1px] dark:border-gray-700 border-gray-500 shadow-2xl">
-      <div className="flex items-center space-x-1 p-1">
+    <motion.div className="fixed bottom-2 mx-auto left-0 right-0 w-max z-50 py-[2px] dark:bg-black dark:bg-opacity-30 bg-white bg-opacity-30 px-[2px] backdrop-blur-lg flex flex-shrink-0 rounded-2xl border-[0.1px] dark:border-gray-700 border-gray-500 shadow-2xl">
+      <div className="flex flex-shrink-0 items-center space-x-1 p-1">
         {apps.map((app, index) => {
           const isHovered = hoveredApp === app.appName;
           const leftNeighbor1 = index > 0 ? apps[index - 1].appName : null;
@@ -58,7 +58,9 @@ const Dock = () => {
           return (
             <motion.div
               key={app.appName}
-              className="relative flex flex-col items-center cursor-pointer"
+              className={`relative flex flex-col items-center cursor-pointer ${
+                index >= 4 ? 'hidden sm:block' : ''
+              }`}
               onClick={() => handleDockClick(app.id, app.appName)}
               onMouseEnter={() => setHoveredApp(app.appName)}
               onMouseLeave={() => setHoveredApp(null)}
