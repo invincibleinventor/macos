@@ -18,26 +18,26 @@ const Window = ({ id, appName, title, component: Component, props, isMinimized, 
   const app = apps.find((app) => app.appName === appName);
 
   useEffect(() => {
-    // Detect mobile device and maximize window on load
-    if (window.innerWidth < 768) {
-      handleMaximize(true);
-    }
-  }, []);
-
-  useEffect(() => {
     if (isMinimized) {
       setPosition({ top: -1000, left: -1000 }); // Move off-screen when minimized
-    } else if (!isMaximized) {
+    } else if (isMaximized) {
+      const { innerWidth: screenWidth, innerHeight: screenHeight } = window;
+      setPosition({ top: PANEL_HEIGHT, left: 0 });
+      setSize({
+        width: screenWidth,
+        height: screenHeight - PANEL_HEIGHT - DOCK_HEIGHT,
+      });
+    } else {
       setPosition(previousState.position);
       setSize(previousState.size);
     }
   }, [isMinimized, isMaximized]);
 
-  const handleMaximize = (forceMaximize = false) => {
+  const handleMaximize = () => {
     const { innerWidth: screenWidth, innerHeight: screenHeight } = window;
 
-    if (!isMaximized || forceMaximize) {
-      setPreviousState({ position, size });
+    if (!isMaximized) {
+      setPreviousState({ position, size }); // Save current state for restoring
       setSize({
         width: screenWidth,
         height: screenHeight - PANEL_HEIGHT - DOCK_HEIGHT,
@@ -130,6 +130,13 @@ const Window = ({ id, appName, title, component: Component, props, isMinimized, 
     document.addEventListener('mouseup', onMouseUp);
   };
 
+  useEffect(() => {
+    const isMobile = window.innerWidth <= 768; // Adjust breakpoint as needed
+    if (isMobile && !isMaximized) {
+      handleMaximize();
+    }
+  }, []);
+
   return (
     <div
       className={`absolute border dark:border-gray-800 border-gray-400 shadow-md ${isMaximized ? '' : 'rounded-xl'}`}
@@ -143,13 +150,17 @@ const Window = ({ id, appName, title, component: Component, props, isMinimized, 
       onMouseDown={() => setActiveWindow(id)}
     >
       <div
-        className={`cursor-move ${isMaximized ? '' : 'rounded-t-xl'} ${app?.titlebarblurred ? `dark:bg-opacity-50 bg-opacity-70 dark:bg-black bg-white relative backdrop-blur-sm` : ' dark:bg-gray-800 bg-white relative backdrop-blur-sm'} px-3 py-[10px] flex justify-between`}
-        onDoubleClick={()=>handleMaximize}
+        className={`cursor-move ${isMaximized ? '' : 'rounded-t-xl'} ${
+          app?.titlebarblurred
+            ? 'dark:bg-opacity-50 bg-opacity-70 dark:bg-black bg-white relative backdrop-blur-sm'
+            : 'dark:bg-gray-800 bg-white relative backdrop-blur-sm'
+        } px-3 py-[10px] flex justify-between`}
+        onDoubleClick={handleMaximize}
         onMouseDown={handleDragStart}
       >
         <div className='flex flex-row items-center content-center space-x-2'>
           <button className='w-3 h-3 rounded-full bg-red-500' onClick={() => removeWindow(id)}></button>
-          <button className='w-3 h-3 rounded-full bg-green-500' onClick={() => handleMaximize()}></button>
+          <button className='w-3 h-3 rounded-full bg-green-500' onClick={handleMaximize}></button>
           <button className='w-3 h-3 rounded-full bg-yellow-500' onClick={() => updateWindow(id, { isMinimized: true })}></button>
         </div>
         <div className='max-w-72 absolute mx-auto dark:text-white right-0 left-0 bottom-[6px] font-sf font-semibold text-sm text-center'>{title}</div>
