@@ -1,4 +1,4 @@
-export default function App1Component(props:any){
+export default function App1Component(){
     return(
         <>hello</>
     )
