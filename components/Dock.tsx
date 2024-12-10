@@ -9,7 +9,7 @@ const Dock = () => {
   const { windows, addWindow, toggleWindows, setActiveWindow } = useWindows();
   const [hoveredApp, setHoveredApp] = useState<string | null>(null);
 
-  const handleDockClick = (appId: string, appName: string, appTitle: string) => {
+  const handleDockClick = (appId: string, appName: string, appTitle?: string) => {
     // Find all windows that match the appName
     const appWindows = windows.filter((win: any) => win.appName === appName);
 
@@ -59,7 +59,7 @@ const Dock = () => {
             <motion.div
               key={app.appName}
               className="relative flex flex-col items-center cursor-pointer"
-              onClick={() => handleDockClick(app.id, app.appName, app.title)}
+              onClick={() => handleDockClick(app.id, app.appName)}
               onMouseEnter={() => setHoveredApp(app.appName)}
               onMouseLeave={() => setHoveredApp(null)}
               whileHover={{ scale }}

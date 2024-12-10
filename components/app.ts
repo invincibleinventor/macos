@@ -70,6 +70,7 @@
     {
       id: 'appstore',
       appName: 'App Store',
+      
       icon: 'appstore.png', // Replace with actual icon path
       maximizeable: false,
       componentName: 'AppStore',
