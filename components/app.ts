@@ -1,6 +1,6 @@
 // app.ts
 
-  export const apps: AppData[] = [
+  export const apps = [
     {
       id: 'finder',
       appName: 'Finder',
